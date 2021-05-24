@@ -22,19 +22,17 @@ public class SMSService extends Service {
         return null;
     }
 
-    private void sendToServer(String smsBody) {
+    private void sendToServer(String smsBody, String smsFrom) {
         Log.i("SMSMONITOR", "===> 1");
-        sParseAPI.save(new SMSToProcess("android", smsBody));
+        //sParseAPI.save(new SMSToProcess(smsFrom, smsBody));
         Log.i("SMSMONITOR", "===> 2");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("SMSMONITOR", "===> 3");
-        String sms_body = intent.getExtras().getString("sms_body");
-        Log.i("SMSMONITOR", "===> 4");
-        sendToServer(sms_body);
-        Log.i("SMSMONITOR", "===> 5");
+//        String sms_body = intent.getExtras().getString("sms_body");
+//        String sms_from = intent.getExtras().getString("sms_from");
+//        sendToServer(sms_body);
         return START_STICKY;
     }
 
