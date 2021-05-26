@@ -21,7 +21,7 @@ public class SMSMonitor extends BroadcastReceiver {
     private String TAG = SMSMonitor.class.getSimpleName();
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://sparse.blockwit.io/api/v1/sms/")
+            .baseUrl("https://sparse.blockwit.io/api/v1/msgs/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
