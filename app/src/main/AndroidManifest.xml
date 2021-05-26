@@ -16,9 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sparseapp">
 
-
-        <service android:name=".SMSService"></service>
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

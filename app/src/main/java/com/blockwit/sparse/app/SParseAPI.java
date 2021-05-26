@@ -7,6 +7,6 @@ import retrofit2.http.POST;
 public interface SParseAPI {
 
     @POST("save")
-    Call<Object> save(@Body SMSToProcess smsToProcess);
+    Call<Object> save(@Body MessageDTO messageDTO);
 
 }
