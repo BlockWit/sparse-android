@@ -10,7 +10,7 @@ public class MessageDTO {
 
     private String text;
 
-    public MessageDTO(MessageProviderType messageProviderType, String from, String to, String text) {
+    public MessageDTO(MessageProviderType providerType, String from, String to, String text) {
         this.providerType = providerType;
         this.from = from;
         this.to = to;
