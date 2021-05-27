@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -23,6 +24,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SMSMonitor extends BroadcastReceiver {
 
     public static final String REG_CODE_WORD = "COM_BLOCKWIT_SPARCE_APP_REG_CODE_WORD";
@@ -35,8 +38,6 @@ public class SMSMonitor extends BroadcastReceiver {
 
     SParseAPI sParseAPI = retrofit.create(SParseAPI.class);
 
-    /** @// TODO: 27.05.2021 save to storage */
-    static Map<String, String> ICCIDtoPhoneNumber = new HashMap<>();
 
     @SuppressLint("MissingPermission")
     @TargetApi(Build.VERSION_CODES.M)
@@ -49,6 +50,8 @@ public class SMSMonitor extends BroadcastReceiver {
         SubscriptionManager manager = SubscriptionManager.from(context);
         SubscriptionInfo info = manager.getActiveSubscriptionInfo(sub);
         String iccid = info.getIccId();
+        SharedPreferences phonenumberDetails = context.getSharedPreferences("phonenumber-details",
+                MODE_PRIVATE);
         if (iccid.isEmpty()) {
             Log.e(TAG, "Cant get iccid");
         } else {
@@ -58,17 +61,12 @@ public class SMSMonitor extends BroadcastReceiver {
                 Log.v(TAG, "message: " + body);
                 String from = smsMessage.getDisplayOriginatingAddress();
                 Log.v(TAG, "from: " + smsMessage.getDisplayOriginatingAddress());
-
-
                 if(body.startsWith(REG_CODE_WORD)) {
                     /* registration phone number*/
                     String destinationNumber = body.substring(REG_CODE_WORD.length());
-                    ICCIDtoPhoneNumber.put(iccid, destinationNumber);
+                    phonenumberDetails.edit().putString(iccid, destinationNumber).apply();
                 } else {
-                    String to = ICCIDtoPhoneNumber.get(iccid);
-                    if (to == null) {
-                        to = "";
-                    }
+                    String to = phonenumberDetails.getString(iccid, "");
                     sParseAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
