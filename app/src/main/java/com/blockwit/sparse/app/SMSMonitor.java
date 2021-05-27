@@ -49,6 +49,8 @@ public class SMSMonitor extends BroadcastReceiver {
             String from = smsMessage.getDisplayOriginatingAddress();
             Log.v(TAG, "from: " + smsMessage.getDisplayOriginatingAddress());
             String to = info.getNumber();
+            if(to == null)
+                to = "";
             sParseAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
