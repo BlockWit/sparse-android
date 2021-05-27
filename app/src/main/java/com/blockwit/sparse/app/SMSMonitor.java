@@ -6,8 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import retrofit2.Call;
@@ -33,6 +37,10 @@ public class SMSMonitor extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent == null || intent.getAction() == null || !intent.getAction().equals(Telephony.Sms.Intents.SMS_RECEIVED_ACTION))
             return;
+        Bundle bundle = intent.getExtras();
+        int sub = bundle.getInt("subscription", -1);
+        SubscriptionManager manager = SubscriptionManager.from(context);
+        SubscriptionInfo info = manager.getActiveSubscriptionInfo(sub);
 
         SmsMessage[] extractMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
         for (SmsMessage smsMessage : extractMessages) {
@@ -40,7 +48,7 @@ public class SMSMonitor extends BroadcastReceiver {
             Log.v(TAG, "message: " + body);
             String from = smsMessage.getDisplayOriginatingAddress();
             Log.v(TAG, "from: " + smsMessage.getDisplayOriginatingAddress());
-            String to = "!!!";
+            String to = info.getNumber();
             sParseAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
