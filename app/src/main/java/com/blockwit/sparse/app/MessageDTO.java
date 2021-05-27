@@ -4,17 +4,28 @@ public class MessageDTO {
 
     private MessageProviderType providerType;
 
+    private Long date;
+
     private String from;
 
     private String to;
 
     private String text;
 
-    public MessageDTO(MessageProviderType providerType, String from, String to, String text) {
+    public MessageDTO(MessageProviderType providerType, Long date, String from, String to, String text) {
         this.providerType = providerType;
+        this.date = date;
         this.from = from;
         this.to = to;
         this.text = text;
+    }
+
+    public Long getDate() {
+        return date;
+    }
+
+    public void setDate(Long date) {
+        this.date = date;
     }
 
     public String getFrom() {
