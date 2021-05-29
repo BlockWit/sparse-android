@@ -85,7 +85,13 @@ public class MainActivity extends AppCompatActivity {
         EditText myEditText =  (EditText) findViewById(R.id.editTextPhone);
         String number = myEditText.getText().toString();
         Log.d(TAG, "Text from editTextPhone " + number);
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    REQUEST_SEND_SMS);
+            Log.v(TAG, "Permission requested");
+        }
         SmsManager smsManager = SmsManager.getDefault();
         String reg_msg_body = SMSMonitor.REG_CODE_WORD + " " + number;
         try {
