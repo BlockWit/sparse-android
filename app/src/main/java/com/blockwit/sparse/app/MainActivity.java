@@ -1,6 +1,7 @@
 package com.blockwit.sparse.app;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,16 +20,28 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
-    private final int REQUEST_CODE_SMS_PERMISSION = 1;
-
-    private final int REQUEST_READ_PHONE_STATE = 2;
-
-    private final int REQUEST_READ_PHONE_NUMBERS = 3;
-
-    private final int REQUEST_INTERNET = 4;
-
     private final int REQUEST_SEND_SMS = 5;
 
+    private int PERMISSION_ALL = 1;
+
+    String[] PERMISSIONS = {
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_PHONE_NUMBERS,
+            Manifest.permission.INTERNET,
+            Manifest.permission.SEND_SMS
+    };
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,43 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestSmsPermission() {
         Log.v(TAG, "Request permission");
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.RECEIVE_SMS},
-                    REQUEST_CODE_SMS_PERMISSION
-            );
-            Log.v(TAG, "Permission requested");
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    REQUEST_READ_PHONE_STATE);
-            Log.v(TAG, "Permission requested");
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_NUMBERS},
-                    REQUEST_READ_PHONE_NUMBERS);
-            Log.v(TAG, "Permission requested");
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.INTERNET},
-                    REQUEST_INTERNET);
-            Log.v(TAG, "Permission requested");
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    REQUEST_SEND_SMS);
-            Log.v(TAG, "Permission requested");
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+            Log.v(TAG, "Permissions requested");
         }
 
     }
