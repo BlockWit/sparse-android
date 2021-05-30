@@ -59,14 +59,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onServerRadioButtonClick"
-            android:text="Min Server/CryptoBWFmin" />
+            android:text="Min server/CryptoBWFmin" />
 
         <RadioButton
             android:id="@+id/radioMaxServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onServerRadioButtonClick"
-            android:text="MaxServer/CryptoBWFtest" />
+            android:text="Max server/CryptoBWFtest" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

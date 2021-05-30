@@ -14,6 +14,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +76,9 @@ public class SMSMonitor extends BroadcastReceiver {
                     /* registration phone number*/
                     String destinationNumber = body.substring(REG_CODE_WORD.length());
                     phonenumberDetails.edit().putString(iccid, destinationNumber).apply();
+                    Toast toast = Toast.makeText(context,
+                            "Номер: " + destinationNumber + "\n Зарегистрирован в приолжении", Toast.LENGTH_LONG);
+                    toast.show();
                 } else {
                     String to = phonenumberDetails.getString(iccid, "");
 

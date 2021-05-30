@@ -136,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         String reg_msg_body = SMSMonitor.REG_CODE_WORD + " " + number;
         try {
             smsManager.sendTextMessage(number, null, reg_msg_body, null, null);
+            Toast toast = Toast.makeText(this.getApplicationContext(),
+                    "Послана SMS для регистрации номера:\n" + number, Toast.LENGTH_LONG);
+            toast.show();
+
         } catch (Throwable t) {
             Log.d(TAG, t.getMessage());
         }
