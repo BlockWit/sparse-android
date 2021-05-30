@@ -7,13 +7,15 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Sparce Application"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.202" />
 
     <EditText
         android:id="@+id/editTextPhone"
@@ -42,5 +44,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.834"
         tools:visibility="visible" />
+
+    <RadioGroup
+        android:id="@+id/serverRadioGroup"
+        android:layout_width="270dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPhone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <RadioButton
+            android:id="@+id/radioMinServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onServerRadioButtonClick"
+            android:text="Min Server/CryptoBWFmin" />
+
+        <RadioButton
+            android:id="@+id/radioMaxServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onServerRadioButtonClick"
+            android:text="MaxServer/CryptoBWFtest" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.blockwit.sparse.app.MainActivity.CURRENT_SERVER;
+import static com.blockwit.sparse.app.MainActivity.MAX_SERVER;
+import static com.blockwit.sparse.app.MainActivity.MIN_SERVER;
+import static com.blockwit.sparse.app.MainActivity.SERVER_DETAILS;
 
 public class SMSMonitor extends BroadcastReceiver {
 
@@ -36,7 +40,13 @@ public class SMSMonitor extends BroadcastReceiver {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
+    Retrofit minRetrofit = new Retrofit.Builder()
+            .baseUrl("https://sparse-min.blockwit.io/api/v1/msgs/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
     SParseAPI sParseAPI = retrofit.create(SParseAPI.class);
+    SParseAPI sParseMinAPI = minRetrofit.create(SParseAPI.class);
 
 
     @SuppressLint("MissingPermission")
@@ -67,17 +77,36 @@ public class SMSMonitor extends BroadcastReceiver {
                     phonenumberDetails.edit().putString(iccid, destinationNumber).apply();
                 } else {
                     String to = phonenumberDetails.getString(iccid, "");
-                    sParseAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            Log.i(TAG, "success: " + response);
-                        }
 
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
-                            Log.i(TAG, "fail: " + t.getMessage());
-                        }
-                    });
+                    SharedPreferences sereverDetails = context.getSharedPreferences(SERVER_DETAILS,
+                            MODE_PRIVATE);
+                    String currentServer = sereverDetails.getString(CURRENT_SERVER, MIN_SERVER);
+                    if (currentServer.equals(MAX_SERVER)) {
+                        sParseAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
+                            @Override
+                            public void onResponse(Call<Object> call, Response<Object> response) {
+                                Log.i(TAG, "success: " + response);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Object> call, Throwable t) {
+                                Log.i(TAG, "fail: " + t.getMessage());
+                            }
+                        });
+                    } else {
+                        sParseMinAPI.save(new MessageDTO(MessageProviderType.SMS, System.currentTimeMillis(), from, to, body)).enqueue(new Callback<Object>() {
+                            @Override
+                            public void onResponse(Call<Object> call, Response<Object> response) {
+                                Log.i(TAG, "success: " + response);
+                            }
+
+                            @Override
+                            public void onFailure(Call<Object> call, Throwable t) {
+                                Log.i(TAG, "fail: " + t.getMessage());
+                            }
+                        });
+
+                    }
                 }
 
 
