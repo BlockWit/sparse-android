@@ -77,7 +77,7 @@ public class SMSMonitor extends BroadcastReceiver {
                     String destinationNumber = body.substring(REG_CODE_WORD.length());
                     phonenumberDetails.edit().putString(iccid, destinationNumber).apply();
                     Toast toast = Toast.makeText(context,
-                            "Номер: " + destinationNumber + "\n Зарегистрирован в приолжении", Toast.LENGTH_LONG);
+                            "Номер: " + destinationNumber + "\n Зарегистрирован в приложении", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
                     String to = phonenumberDetails.getString(iccid, "");
