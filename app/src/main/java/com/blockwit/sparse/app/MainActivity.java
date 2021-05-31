@@ -20,9 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.hbb20.CountryCodePicker;
+
 public class MainActivity extends AppCompatActivity {
 
-;
     private String TAG = MainActivity.class.getSimpleName();
 
     private final int REQUEST_SEND_SMS = 5;
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.SEND_SMS
     };
 
+    CountryCodePicker ccp;
+    EditText editTextCarrierNumber;
+
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
@@ -59,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initServerRadioButton();
         requestSmsPermission();
+
+        ccp = findViewById(R.id.ccp);
+        editTextCarrierNumber = findViewById(R.id.editText_carrierNumber);
+        ccp.registerCarrierNumberEditText(editTextCarrierNumber);
     }
 
     void initServerRadioButton() {
@@ -122,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickAdd(View view) {
         Log.d(TAG, "Add button clicked");
-        EditText myEditText =  (EditText) findViewById(R.id.editTextPhone);
-        String number = myEditText.getText().toString();
+        String number = ccp.getFullNumberWithPlus();
         Log.d(TAG, "Text from editTextPhone " + number);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
